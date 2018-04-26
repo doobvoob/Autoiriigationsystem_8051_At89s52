@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\auto_irrigation" 
+PRINT(".\Listings\auto_irrigation.m51") RAMSIZE(256) 

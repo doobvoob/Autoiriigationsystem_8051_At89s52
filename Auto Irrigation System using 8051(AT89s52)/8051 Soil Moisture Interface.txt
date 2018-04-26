@@ -1,0 +1,169 @@
+RS EQU P2.7 	//Read pin
+RW EQU P2.6	// Write Pin
+E  EQU P2.5	//Enable Pin
+
+ORG 00H
+SETB P3.5
+MOV TMOD,#00000001B 
+MAIN:ACALL DINT
+     ACALL TEXT1
+     JB P3.5, NEXT
+     ACALL LINE2
+     ACALL TEXT2
+     CLR P2.0
+     SJMP EXIT
+NEXT:ACALL LINE2
+     ACALL TEXT3
+     SETB P2.0
+     EXIT:ACALL DELAY1
+SJMP MAIN
+
+
+DELAY1:MOV R0,#15D
+BACK1: MOV TH0,#00000000B   
+       MOV TL0,#00000000B   
+       SETB TR0             
+HERE2: JNB TF0,HERE2         
+       CLR TR0             
+       CLR TF0             
+       DJNZ R0,BACK1
+       RET
+
+
+
+
+TEXT1: MOV A,#"M"
+    ACALL DISPLAY
+    MOV A,#"o"
+    ACALL DISPLAY
+    MOV A,#"i"
+    ACALL DISPLAY
+    MOV A,#"s"
+    ACALL DISPLAY
+    MOV A,#"t"
+    ACALL DISPLAY
+    MOV A,#"u"
+    ACALL DISPLAY
+    MOV A,#"r"
+    ACALL DISPLAY
+    MOV A,#"e"
+    ACALL DISPLAY
+    MOV A,#" "
+    ACALL DISPLAY
+    MOV A,#"C"
+    ACALL DISPLAY
+    MOV A,#"o"
+    ACALL DISPLAY
+    MOV A,#"n"
+    ACALL DISPLAY
+    MOV A,#"t"
+    ACALL DISPLAY
+    MOV A,#"r"
+    ACALL DISPLAY
+    MOV A,#"o"
+    ACALL DISPLAY
+    MOV A,#"l"
+    ACALL DISPLAY
+    RET 
+    
+TEXT2: MOV A,#"["
+    ACALL DISPLAY
+     MOV A,#"O"
+    ACALL DISPLAY
+    MOV A,#"K"
+    ACALL DISPLAY
+    MOV A,#"]"
+    ACALL DISPLAY
+    MOV A,#" "
+    ACALL DISPLAY
+    MOV A,#"P"
+    ACALL DISPLAY
+    MOV A,#"u"
+    ACALL DISPLAY
+    MOV A,#"m"
+    ACALL DISPLAY
+    MOV A,#"p"
+    ACALL DISPLAY
+    MOV A,#" "
+    ACALL DISPLAY
+    MOV A,#"O"
+    ACALL DISPLAY
+    MOV A,#"F"
+    ACALL DISPLAY
+    MOV A,#"F"
+    ACALL DISPLAY
+    RET 
+    
+TEXT3: MOV A,#"["
+    ACALL DISPLAY
+    MOV A,#"L"
+    ACALL DISPLAY
+    MOV A,#"o"
+    ACALL DISPLAY
+    MOV A,#"w"
+    ACALL DISPLAY
+    MOV A,#"]"
+    ACALL DISPLAY
+    MOV A,#" "
+    ACALL DISPLAY
+    MOV A,#"P"
+    ACALL DISPLAY
+    MOV A,#"u"
+    ACALL DISPLAY
+    MOV A,#"m"
+    ACALL DISPLAY
+    MOV A,#"p"
+    ACALL DISPLAY
+    MOV A,#" "
+    ACALL DISPLAY
+    MOV A,#"O"
+    ACALL DISPLAY
+    MOV A,#"N"
+    ACALL DISPLAY
+    RET        
+    
+
+ DINT:MOV A,#0CH 
+    ACALL CMD
+    MOV A,#01H 
+    ACALL CMD
+    MOV A,#06H 
+    ACALL CMD
+    MOV A,#80H 
+    ACALL CMD
+    MOV A,#3CH 
+    ACALL CMD
+    RET
+
+LINE2:MOV A,#0C0H 
+    ACALL CMD
+    RET   
+
+CMD: MOV P0,A
+    CLR RS
+    CLR RW
+    SETB E
+    CLR E
+    ACALL DELAY
+    RET
+
+DISPLAY:MOV P0,A
+    SETB RS
+    CLR RW
+    SETB E
+    CLR E
+    ACALL DELAY
+    RET
+
+DELAY: CLR E
+    CLR RS
+    SETB RW
+    MOV P0,#0FFH
+    SETB E
+    MOV A,P0
+    JB ACC.7,DELAY
+    CLR E
+    CLR RW
+    RET
+
+ END        
